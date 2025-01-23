@@ -241,9 +241,9 @@ print(f"Conduction time using s2_s1_segment & mean conduction velocity "
       f"of 61 m/s is {conduction_time} s")
 #Nerve conduction velocity (nerve segment (m) / conduction time (s))
 ncv_a = round(s2_s1_segment/conduction_time, 4)
-print(f"Calculated NCV of subject A is {ncv_a} m/s")
+print(f"Experimental NCV of subject A is {ncv_a} m/s")
 ncv_a_predicted = 66.22+(36*-0.09)+(181*-0.03)
-print(f"Predicted NCV of subject A is {ncv_a_predicted} m/s")
+print(f"Linear regression equation NCV of subject A is {ncv_a_predicted} m/s")
 
 
 
