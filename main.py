@@ -132,12 +132,7 @@ latency_20 = calculate_m_wave_latency_wrist(df, 'EMG 20', 'Stim 20')
 latency_25 = calculate_m_wave_latency_wrist(df, 'EMG 25', 'Stim 25')
 latency_29 = calculate_m_wave_latency_wrist(df, 'EMG 29', 'Stim 29')
 
-# Print results
-print(f"Latency for EMG 17: {latency_17:.5f} s")
-print(f"Latency for EMG 20: {latency_20:.5f} s")
-print(f"Latency for EMG 25: {latency_25:.5f} s")
-print(f"Latency for EMG 29: {latency_29:.5f} s")
-
+# Print results (if needed)
 ### for elbow
 
 def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=3.0):
@@ -173,10 +168,6 @@ latency_65 = calculate_m_wave_latency_wrist(df2, 'EMG 65', 'Stim 65')
 latency_70 = calculate_m_wave_latency_wrist(df2, 'EMG 70', 'Stim 70')
 latency_75 = calculate_m_wave_latency_wrist(df2, 'EMG 75', 'Stim 75')
 
-print(f"Latency for EMG 60: {latency_60:.5f} s")
-print(f"Latency for EMG 65: {latency_65:.5f} s")
-print(f"Latency for EMG 70: {latency_70:.5f} s")
-print(f"Latency for EMG 75: {latency_75:.5f} s")
 
 ###
 
@@ -216,23 +207,43 @@ max_amplitude_20 = calculate_m_wave_amplitude(df, 'EMG 20')
 max_amplitude_25 = calculate_m_wave_amplitude(df, 'EMG 25')
 max_amplitude_29 = calculate_m_wave_amplitude(df, 'EMG 29')
 
-# Print results
-print(f"Maximum amplitude for EMG 17: {max_amplitude_17:.5f} mV")
-print(f"Maximum amplitude for EMG 20: {max_amplitude_20:.5f} mV")
-print(f"Maximum amplitude for EMG 25: {max_amplitude_25:.5f} mV")
-print(f"Maximum amplitude for EMG 29: {max_amplitude_29:.5f} mV")
+# Print results (if needed)
+
+max_amplitude_60 = calculate_m_wave_amplitude(df2, 'EMG 60')
+max_amplitude_65 = calculate_m_wave_amplitude(df2, 'EMG 65')
+max_amplitude_70 = calculate_m_wave_amplitude(df2, 'EMG 70')
+max_amplitude_75 = calculate_m_wave_amplitude(df2, 'EMG 75')
+
+
 
 #Nerve segment
-#Proximal nerve segment (S2-Active electrode) (m)
-#Distal nerve segment (S1-Active electrode) (m)
-#S2-S1 nerve segment (m)
+#Proximal nerve segment (S2-Active electrode) (m) = 0.35m
+elbow_nerve_segment = 0.35
+print(f"Proximal nerve segment = {elbow_nerve_segment} m")
+#Distal nerve segment (S1-Active electrode) (m) = 0.06m
+wrist_nerve_segment = 0.06
+print(f"Distal nerve segment = {wrist_nerve_segment} m")
+#S2-S1 nerve segment (m) = 0.29m
+s2_s1_segment = 0.29
+print(f"S2-S1 nerve segment = {s2_s1_segment} m")
 
 #M-wave Latencies (1 ms = 0.001s)
 #Elbow site (proximal)
+elbow_m_wave = round((latency_17+latency_20+latency_25+latency_29)/4,4)
+print(f"Average elbow to electrode latency is {elbow_m_wave} s")
 #Wrist site (distal)
-
+wrist_m_wave = round((latency_60+latency_65+latency_70+latency_75)/4,4)
+print(f"Average wrist to electrode latency is {wrist_m_wave} s")
 #Conduction time
-#Upper extremity (median nerve)
+#mean conduction velocity is 61m/s
+conduction_time = round(s2_s1_segment/61, 4)
+print(f"Conduction time using s2_s1_segment & mean conduction velocity "
+      f"of 61 m/s is {conduction_time} s")
+#Nerve conduction velocity (nerve segment (m) / conduction time (s))
+ncv_a = round(s2_s1_segment/conduction_time, 4)
+print(f"Calculated NCV of subject A is {ncv_a} m/s")
+ncv_a_predicted = 66.22+(36*-0.09)+(181*-0.03)
+print(f"Predicted NCV of subject A is {ncv_a_predicted} m/s")
 
 
 
