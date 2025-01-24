@@ -236,7 +236,8 @@ wrist_m_wave = round((latency_60+latency_65+latency_70+latency_75)/4,4)
 print(f"Average wrist to electrode latency is {wrist_m_wave} s")
 #Conduction time
 #mean conduction velocity is 61m/s
-conduction_time = round(s2_s1_segment/61, 4)
+#Conduction time = proximal segment - distal segment
+conduction_time = round(elbow_m_wave-wrist_m_wave, 4)
 print(f"Conduction time using s2_s1_segment & mean conduction velocity "
       f"of 61 m/s is {conduction_time} s")
 #Nerve conduction velocity (nerve segment (m) / conduction time (s))
