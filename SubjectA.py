@@ -49,11 +49,11 @@ def plot_emg_stim(df, emg_column, stim_column):
     # Create a second y-axis for Stimulation data
     ax2 = ax1.twinx()
     ax2.plot(df['Time'], df[stim_column], 'r-', label=stim_column)
-    ax2.set_ylabel(f'{stim_column}', color='red')
+    ax2.set_ylabel('Voltage (mV)', color='red')
     ax2.tick_params(axis='y', colors='red')
 
     # Add a title and legend
-    plt.title(f'{emg_column} and {stim_column} with Separate Y-Axes')
+    plt.title(f'{emg_column} and Voltage with Separate Y-Axes')
     fig.tight_layout()
     plt.show()
 
@@ -82,11 +82,11 @@ def plot_emg_stim2(df2, emg_column, stim_column):
     # Create a second y-axis for Stimulation data
     ax2 = ax1.twinx()
     ax2.plot(df2['Time'], df2[stim_column], 'r-', label=stim_column)
-    ax2.set_ylabel(f'{stim_column}', color='red')
+    ax2.set_ylabel('Voltage (mV)', color='red')
     ax2.tick_params(axis='y', colors='red')
 
     # Add a title and legend
-    plt.title(f'{emg_column} and {stim_column} with Separate Y-Axes')
+    plt.title(f'{emg_column} and Voltage with Separate Y-Axes')
     fig.tight_layout()
     plt.show()
 
