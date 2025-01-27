@@ -108,7 +108,7 @@ plot_emg_stim2(df2, 'EMG 50', 'Stim 50')
 
 ### for wrist
 
-def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=1.5, window_start = 0.07, window_end = 0.6):
+def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=0.1, window_start = 0.1, window_end = 0.3):
     """
     Calculate M-wave latency from the onset of stimulus to the onset of M-wave.
 
@@ -148,7 +148,7 @@ wrist_latency_55 = calculate_m_wave_latency_wrist(df, 'EMG 55', 'Stim 55')
 # Print results (if needed)
 ### for elbow
 
-def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=3.0):
+def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=0.1, window_start = 0.1, window_end = 0.3):
     """
     Calculate M-wave latency from the onset of stimulus to the onset of M-wave.
 
@@ -160,13 +160,15 @@ def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=3.0):
     Returns:
     - latency (float): Latency in seconds.
     """
+
+    df_window = df2[(df2['Time'] >= window_start) & (df2['Time'] <= window_end)]
     # Find the index of the highest stimulation level
     stim_max_index = df2[stim_column].idxmax()
     stim_max_time = df2.loc[stim_max_index, 'Time']  # Time of maximum stimulation
 
     # Find the onset of the M-wave (first time EMG exceeds the threshold)
-    emg_onset_index = df2[df2[emg_column] > threshold].index[0]
-    emg_onset_time = df2.loc[emg_onset_index, 'Time']  # Time of M-wave onset
+    emg_onset_index = df_window[df_window[emg_column] > threshold].index[0]
+    emg_onset_time = df_window.loc[emg_onset_index, 'Time']  # Time of M-wave onset
 
     # Calculate latency
     latency = abs(emg_onset_time - stim_max_time)
@@ -255,3 +257,5 @@ ncv_a = round(s2_s1_segment/conduction_time, 4)
 print(f"Experimental NCV of subject A is {ncv_a} m/s")
 ncv_a_predicted = 66.22+(23*-0.09)+(166*-0.03)
 print(f"Linear regression equation NCV of subject A is {ncv_a_predicted} m/s")
+
+

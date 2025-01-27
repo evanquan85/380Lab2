@@ -245,37 +245,7 @@ print(f"Experimental NCV of subject A is {ncv_a} m/s")
 ncv_a_predicted = 66.22+(36*-0.09)+(181*-0.03)
 print(f"Linear regression equation NCV of subject A is {ncv_a_predicted} m/s")
 
-'''
-# Nerve segments
-elbow_nerve_segment = 0.35  # Proximal nerve segment (m)
-wrist_nerve_segment = 0.06  # Distal nerve segment (m)
-s2_s1_segment = 0.29  # S2-S1 nerve segment (m)
-print(f"Proximal nerve segment = {elbow_nerve_segment} m")
-print(f"Distal nerve segment = {wrist_nerve_segment} m")
-print(f"S2-S1 nerve segment = {s2_s1_segment} m")
 
-# M-wave Latencies (in ms)
-latency_29 = 7  # Example latency at elbow in ms
-latency_75 = 18   # Example latency at wrist in ms
-
-# Convert latencies to seconds
-elbow_m_wave = round(latency_29 / 1000, 4)  # Convert ms to seconds
-wrist_m_wave = round(latency_75 / 1000, 4)  # Convert ms to seconds
-print(f"Elbow to electrode latency is {elbow_m_wave} s")
-print(f"Wrist to electrode latency is {wrist_m_wave} s")
-
-# Conduction time (difference in latencies)
-conduction_time = abs(round(elbow_m_wave - wrist_m_wave, 4))
-print(f"Conduction time is {conduction_time} s")
-
-# Nerve conduction velocity (NCV = distance / time)
-ncv_a = round(abs(s2_s1_segment / conduction_time), 4)
-print(f"Experimental NCV of subject A is {ncv_a} m/s")
-
-# Predicted NCV using linear regression
-ncv_a_predicted = 66.22 + (36 * -0.09) + (181 * -0.03)
-print(f"Linear regression equation NCV of subject A is {ncv_a_predicted} m/s")
-'''
 
 
 
