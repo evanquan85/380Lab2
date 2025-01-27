@@ -53,7 +53,7 @@ def plot_emg_stim(df, emg_column, stim_column):
     ax2.tick_params(axis='y', colors='red')
 
     # Add a title and legend
-    plt.title(f'{emg_column} and Voltage with Separate Y-Axes')
+    plt.title(f'Wrist {emg_column} and Voltage with Separate Y-Axes')
     fig.tight_layout()
     plt.show()
 
@@ -86,7 +86,7 @@ def plot_emg_stim2(df2, emg_column, stim_column):
     ax2.tick_params(axis='y', colors='red')
 
     # Add a title and legend
-    plt.title(f'{emg_column} and Voltage with Separate Y-Axes')
+    plt.title(f'Elbow {emg_column} and Voltage with Separate Y-Axes')
     fig.tight_layout()
     plt.show()
 
@@ -215,7 +215,7 @@ max_amplitude_70 = calculate_m_wave_amplitude(df2, 'EMG 70')
 max_amplitude_75 = calculate_m_wave_amplitude(df2, 'EMG 75')
 
 
-
+''
 #Nerve segment
 #Proximal nerve segment (S2-Active electrode) (m) = 0.35m
 elbow_nerve_segment = 0.35
@@ -229,25 +229,53 @@ print(f"S2-S1 nerve segment = {s2_s1_segment} m")
 
 #M-wave Latencies (1 ms = 0.001s)
 #Elbow site (proximal)
-elbow_m_wave = round((latency_17+latency_20+latency_25+latency_29)/4,4)
-print(f"Average elbow to electrode latency is {elbow_m_wave} s")
+elbow_m_wave = round(latency_75,4)
+print(f"Elbow to electrode latency is {elbow_m_wave} s")
 #Wrist site (distal)
-wrist_m_wave = round((latency_60+latency_65+latency_70+latency_75)/4,4)
-print(f"Average wrist to electrode latency is {wrist_m_wave} s")
+wrist_m_wave = round(latency_29,4)
+print(f"Wrist to electrode latency is {wrist_m_wave} s")
 #Conduction time
 #mean conduction velocity is 61m/s
 #Conduction time = proximal segment - distal segment
-conduction_time = round(elbow_m_wave-wrist_m_wave, 4)
-print(f"Conduction time using s2_s1_segment & mean conduction velocity "
-      f"of 61 m/s is {conduction_time} s")
+conduction_time = (round(elbow_m_wave-wrist_m_wave, 4))
+print(f"Conduction time is {conduction_time} s")
 #Nerve conduction velocity (nerve segment (m) / conduction time (s))
-ncv_a = round(s2_s1_segment/conduction_time, 4)
+ncv_a = round((s2_s1_segment/conduction_time),4)
 print(f"Experimental NCV of subject A is {ncv_a} m/s")
 ncv_a_predicted = 66.22+(36*-0.09)+(181*-0.03)
 print(f"Linear regression equation NCV of subject A is {ncv_a_predicted} m/s")
 
+'''
+# Nerve segments
+elbow_nerve_segment = 0.35  # Proximal nerve segment (m)
+wrist_nerve_segment = 0.06  # Distal nerve segment (m)
+s2_s1_segment = 0.29  # S2-S1 nerve segment (m)
+print(f"Proximal nerve segment = {elbow_nerve_segment} m")
+print(f"Distal nerve segment = {wrist_nerve_segment} m")
+print(f"S2-S1 nerve segment = {s2_s1_segment} m")
 
+# M-wave Latencies (in ms)
+latency_29 = 7  # Example latency at elbow in ms
+latency_75 = 18   # Example latency at wrist in ms
 
+# Convert latencies to seconds
+elbow_m_wave = round(latency_29 / 1000, 4)  # Convert ms to seconds
+wrist_m_wave = round(latency_75 / 1000, 4)  # Convert ms to seconds
+print(f"Elbow to electrode latency is {elbow_m_wave} s")
+print(f"Wrist to electrode latency is {wrist_m_wave} s")
+
+# Conduction time (difference in latencies)
+conduction_time = abs(round(elbow_m_wave - wrist_m_wave, 4))
+print(f"Conduction time is {conduction_time} s")
+
+# Nerve conduction velocity (NCV = distance / time)
+ncv_a = round(abs(s2_s1_segment / conduction_time), 4)
+print(f"Experimental NCV of subject A is {ncv_a} m/s")
+
+# Predicted NCV using linear regression
+ncv_a_predicted = 66.22 + (36 * -0.09) + (181 * -0.03)
+print(f"Linear regression equation NCV of subject A is {ncv_a_predicted} m/s")
+'''
 
 
 

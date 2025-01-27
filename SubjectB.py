@@ -60,7 +60,7 @@ def plot_emg_stim(df, emg_column, stim_column):
     ax2.tick_params(axis='y', colors='red')
 
     # Add a title and legend
-    plt.title(f'{emg_column} and Voltage with Separate Y-Axes')
+    plt.title(f'Wrist {emg_column} and Voltage with Separate Y-Axes')
     fig.tight_layout()
     plt.show()
 
@@ -94,7 +94,7 @@ def plot_emg_stim2(df2, emg_column, stim_column):
     ax2.tick_params(axis='y', colors='red')
 
     # Add a title and legend
-    plt.title(f'{emg_column} and Voltage with Separate Y-Axes')
+    plt.title(f'Elbow {emg_column} and Voltage with Separate Y-Axes')
     fig.tight_layout()
     plt.show()
 
@@ -108,7 +108,7 @@ plot_emg_stim2(df2, 'EMG 50', 'Stim 50')
 
 ### for wrist
 
-def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=4.7):
+def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=1.5, window_start = 0.07, window_end = 0.6):
     """
     Calculate M-wave latency from the onset of stimulus to the onset of M-wave.
 
@@ -116,17 +116,23 @@ def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=4.7):
     - emg_column (str): Column name for the EMG data.
     - stim_column (str): Column name for the stimulation data.
     - threshold (float): Threshold value to define M-wave onset (default is 0.03 mV).
+    - window_start (float): Start time of the window to search for M-wave (seconds).
+    - window_end (float): End time of the window to search for M-wave (seconds).
 
     Returns:
     - latency (float): Latency in seconds.
     """
+    # Define the time window after the stimulus to search for the M-wave
+
+    df_window = df[(df['Time'] >= window_start) & (df['Time'] <= window_end)]
+
     # Find the index of the highest stimulation level
     stim_max_index = df[stim_column].idxmax()
     stim_max_time = df.loc[stim_max_index, 'Time']  # Time of maximum stimulation
 
     # Find the onset of the M-wave (first time EMG exceeds the threshold)
-    emg_onset_index = df[df[emg_column] > threshold].index[0]
-    emg_onset_time = df.loc[emg_onset_index, 'Time']  # Time of M-wave onset
+    emg_onset_index = df_window[df_window[emg_column] > threshold].index[0]
+    emg_onset_time = df_window.loc[emg_onset_index, 'Time']  # Time of M-wave onset
 
     # Calculate latency
     latency = abs(emg_onset_time - stim_max_time)
@@ -134,10 +140,10 @@ def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=4.7):
     return latency
 
 
-latency_40 = calculate_m_wave_latency_wrist(df, 'EMG 40', 'Stim 40')
-latency_45 = calculate_m_wave_latency_wrist(df, 'EMG 45', 'Stim 45')
-latency_50 = calculate_m_wave_latency_wrist(df, 'EMG 50', 'Stim 50')
-latency_55 = calculate_m_wave_latency_wrist(df, 'EMG 55', 'Stim 55')
+wrist_latency_40 = calculate_m_wave_latency_wrist(df, 'EMG 40', 'Stim 40')
+wrist_latency_45 = calculate_m_wave_latency_wrist(df, 'EMG 45', 'Stim 45')
+wrist_latency_50 = calculate_m_wave_latency_wrist(df, 'EMG 50', 'Stim 50')
+wrist_latency_55 = calculate_m_wave_latency_wrist(df, 'EMG 55', 'Stim 55')
 
 # Print results (if needed)
 ### for elbow
@@ -168,10 +174,10 @@ def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=3.0):
     return latency
 
 
-latency_35 = calculate_m_wave_latency_wrist(df2, 'EMG 35', 'Stim 35')
-latency_40 = calculate_m_wave_latency_wrist(df2, 'EMG 40', 'Stim 40')
-latency_45 = calculate_m_wave_latency_wrist(df2, 'EMG 45', 'Stim 45')
-latency_50 = calculate_m_wave_latency_wrist(df2, 'EMG 50', 'Stim 50')
+elbow_latency_35 = calculate_m_wave_latency_wrist(df2, 'EMG 35', 'Stim 35')
+elbow_latency_40 = calculate_m_wave_latency_wrist(df2, 'EMG 40', 'Stim 40')
+elbow_latency_45 = calculate_m_wave_latency_wrist(df2, 'EMG 45', 'Stim 45')
+elbow_latency_50 = calculate_m_wave_latency_wrist(df2, 'EMG 50', 'Stim 50')
 
 
 ###
@@ -234,17 +240,16 @@ print(f"S2-S1 nerve segment = {s2_s1_segment} m")
 
 #M-wave Latencies (1 ms = 0.001s)
 #Elbow site (proximal)
-elbow_m_wave = round((latency_40+latency_45+latency_50+latency_55)/4,4)
+elbow_m_wave = round(elbow_latency_50,4)
 print(f"Average elbow to electrode latency is {elbow_m_wave} s")
 #Wrist site (distal)
-wrist_m_wave = round((latency_35+latency_40+latency_45+latency_50)/4,4)
+wrist_m_wave = round(wrist_latency_50,4)
 print(f"Average wrist to electrode latency is {wrist_m_wave} s")
 #Conduction time
 #mean conduction velocity is 61m/s
 #Conduction time = proximal segment - distal segment
 conduction_time = round(elbow_m_wave-wrist_m_wave, 4)
-print(f"Conduction time using s2_s1_segment & mean conduction velocity "
-      f"of 61 m/s is {conduction_time} s")
+print(f"Conduction time is {conduction_time} s")
 #Nerve conduction velocity (nerve segment (m) / conduction time (s))
 ncv_a = round(s2_s1_segment/conduction_time, 4)
 print(f"Experimental NCV of subject A is {ncv_a} m/s")
