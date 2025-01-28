@@ -15,7 +15,7 @@ df2 = df2.rename(columns={'Time (s)': 'Time', '35V CH1': 'EMG 35', '35V CH2': 'S
                        '40V CH2': 'Stim 40', '45V CH1': 'EMG 45', '45V CH2': 'Stim 45',
                        '50V CH1': 'EMG 50', '50V CH2': 'Stim 50'})
 
-sampling_rate = 2000
+sampling_rate = 50000
 num_samples = len(df)
 num_samples2 = len(df2)
 df['Time'] = [i/sampling_rate for i in range(num_samples)]
@@ -108,7 +108,7 @@ plot_emg_stim2(df2, 'EMG 50', 'Stim 50')
 
 ### for wrist
 
-def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=0.1, window_start = 0.1, window_end = 0.3):
+def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=0.1, window_start = 0.003, window_end = 0.025):
     """
     Calculate M-wave latency from the onset of stimulus to the onset of M-wave.
 
@@ -148,7 +148,7 @@ wrist_latency_55 = calculate_m_wave_latency_wrist(df, 'EMG 55', 'Stim 55')
 # Print results (if needed)
 ### for elbow
 
-def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=0.1, window_start = 0.1, window_end = 0.3):
+def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=0.1, window_start = 0.005, window_end = 0.025):
     """
     Calculate M-wave latency from the onset of stimulus to the onset of M-wave.
 
@@ -184,7 +184,7 @@ elbow_latency_50 = calculate_m_wave_latency_wrist(df2, 'EMG 50', 'Stim 50')
 
 ###
 
-def calculate_m_wave_amplitude(df, emg_column, threshold=0.3, window_start=0, window_end=2.0):
+def calculate_m_wave_amplitude(df, emg_column, threshold=0.1, window_start=0.005, window_end=0.025):
     """
     Calculate the maximum amplitude of the M-wave after the stimulus onset.
 

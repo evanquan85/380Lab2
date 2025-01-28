@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 
 df = pd.read_excel('data/B01 NCV Data.xlsx')
 df2 = pd.read_excel('data/B01 NCV Data.xlsx', sheet_name='Proximal (Elbow)')
+#CH1 = EMG, CH2 = Voltage
 df = df.rename(columns={'EMG 17 (mV)': 'EMG 17', 'EMG 20 (mV)': 'EMG 20', 'Stim (20)': 'Stim 20',
                'EMG 25 (mV)': 'EMG 25', 'EMG 29 (mV)': 'EMG 29'})
 df2 = df2.rename(columns={'EMG 60 (mV)': 'EMG 60', 'EMG 65 (mV)': 'EMG 65',
                         'EMG 70 (mV)': 'EMG 70', 'EMG 75 (mV)': 'EMG 75'})
-sampling_rate = 2000
+sampling_rate = 50000
 num_samples = len(df)
 num_samples2 = len(df2)
 df['Time'] = [i/sampling_rate for i in range(num_samples)]
@@ -99,7 +100,7 @@ plot_emg_stim2(df2, 'EMG 75', 'Stim 75')
 
 ### for wrist
 
-def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=4.7):
+def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=4, window_start=0, window_end=0.05):
     """
     Calculate M-wave latency from the onset of stimulus to the onset of M-wave.
 
@@ -111,13 +112,16 @@ def calculate_m_wave_latency_wrist(df, emg_column, stim_column, threshold=4.7):
     Returns:
     - latency (float): Latency in seconds.
     """
+
+    df_window = df[(df['Time'] >= window_start) & (df['Time'] <= window_end)]
+
     # Find the index of the highest stimulation level
     stim_max_index = df[stim_column].idxmax()
     stim_max_time = df.loc[stim_max_index, 'Time']  # Time of maximum stimulation
 
     # Find the onset of the M-wave (first time EMG exceeds the threshold)
-    emg_onset_index = df[df[emg_column] > threshold].index[0]
-    emg_onset_time = df.loc[emg_onset_index, 'Time']  # Time of M-wave onset
+    emg_onset_index = df_window[df_window[emg_column] > threshold].index[0]
+    emg_onset_time = df_window.loc[emg_onset_index, 'Time']  # Time of M-wave onset
 
     # Calculate latency
     latency = abs(emg_onset_time - stim_max_time)
@@ -135,7 +139,7 @@ latency_29 = calculate_m_wave_latency_wrist(df, 'EMG 29', 'Stim 29')
 # Print results (if needed)
 ### for elbow
 
-def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=3.0):
+def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=0.5, window_start=0.025, window_end=0.100):
     """
     Calculate M-wave latency from the onset of stimulus to the onset of M-wave.
 
@@ -147,13 +151,14 @@ def calculate_m_wave_latency_elbow(df2, emg_column, stim_column, threshold=3.0):
     Returns:
     - latency (float): Latency in seconds.
     """
+    df2_window = df2[(df2['Time'] >= window_start) & (df2['Time'] <= window_end)]
     # Find the index of the highest stimulation level
     stim_max_index = df2[stim_column].idxmax()
     stim_max_time = df2.loc[stim_max_index, 'Time']  # Time of maximum stimulation
 
     # Find the onset of the M-wave (first time EMG exceeds the threshold)
-    emg_onset_index = df2[df2[emg_column] > threshold].index[0]
-    emg_onset_time = df2.loc[emg_onset_index, 'Time']  # Time of M-wave onset
+    emg_onset_index = df2_window[df2_window[emg_column] > threshold].index[0]
+    emg_onset_time = df2_window.loc[emg_onset_index, 'Time']  # Time of M-wave onset
 
     # Calculate latency
     latency = abs(emg_onset_time - stim_max_time)
@@ -171,7 +176,7 @@ latency_75 = calculate_m_wave_latency_wrist(df2, 'EMG 75', 'Stim 75')
 
 ###
 
-def calculate_m_wave_amplitude(df, emg_column, threshold=0.3, window_start=0, window_end=2.0):
+def calculate_m_wave_amplitude(df, emg_column, threshold=4, window_start=0.005, window_end=0.06):
     """
     Calculate the maximum amplitude of the M-wave after the stimulus onset.
 
